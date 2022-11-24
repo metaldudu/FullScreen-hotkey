@@ -7,6 +7,7 @@
 // @match       https://www.aliyundrive.com/*
 // @match       https://www.miguvideo.com/*
 // @description 支持网站：澎湃、阿里云盘、咪咕视频
+// @license MIT
 // @description 2022/11/23 10:30:23
 // ==/UserScript==
 
