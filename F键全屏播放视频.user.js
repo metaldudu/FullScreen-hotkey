@@ -2,7 +2,7 @@
 // @name        F键全屏播放视频
 // @namespace   Violentmonkey Scripts
 // @icon        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAMklEQVR4nGJZ8LiXgZaAiaamj1owasGoBaMWjFowasGoBaMWjFowasGoBVQEgAAAAP//s/kCU8RdtEcAAAAASUVORK5CYII=
-// @version     0.1.8
+// @version     0.1.9
 // @author      MetalDudu
 // @match       https://*.thepaper.cn/*
 // @match       https://www.aliyundrive.com/*
@@ -15,55 +15,62 @@
 // @match       https://www.toutiao.com/*
 // @match       https://v.qq.com/*
 // @description 支持网站：澎湃、阿里云盘、咪咕视频、豆瓣广播、优酷、西瓜视频、虎嗅、网易公开课、头条、腾讯视频
-// @description 默认支持F键全屏的网站：B站、新浪微博
+// @description 默认支持F键全屏的网站：爱奇艺、B站、新浪微博
 // @license MIT
-// @description 2023-10-13
+// @description 2023-12-05
 // ==/UserScript==
 
-// 获取网站名称 @example: getSiteName('www.baidu.com'); // 'baidu'
 const getSiteName = hostname => hostname.match(/([^\.]+)\.[^\.]+$/)[1];
 
+(function () {
+  'use strict';
 
-(function() {
-    'use strict';
-    const siteName = getSiteName(location.hostname);
+  const siteName = getSiteName(location.hostname);
 
-    window.onkeydown = function (event) {
-      if(event.key === "f" || event.key === "F"){
-        if(siteName === 'thepaper'){
-          document.querySelector(".dplayer-icon.dplayer-full-icon").click();
+  window.onkeydown = function (event) {
+    if (event.key === "f" || event.key === "F") {
+      let selector;
+
+      if (siteName === 'ixigua') {
+        // 尝试通过 xgplayer-control-item__entry 类名找到全屏按钮的最后一个元素
+        const arr1 = document.getElementsByClassName("xgplayer-control-item__entry");
+        arr1[arr1.length-1].click();
+      } else {
+        switch (siteName) {
+          case 'thepaper':
+            selector = ".dplayer-icon.dplayer-full-icon";
+            break;
+          case 'aliyundrive':
+            selector = ".action--HeWYA";
+            break;
+          case 'miguvideo':
+            selector = ".btn-bg.zoom-out";
+            break;
+          case 'toutiao':
+            selector = ".xgplayer-fullscreen";
+            break;
+          case 'douban':
+          case '163':
+            selector = ".vjs-fullscreen-control.vjs-control.vjs-button";
+            break;
+          case 'youku':
+            selector = ".kui-fullscreen-icon-0";
+            break;
+          case 'huxiu':
+            selector = ".plyr__control";
+            break;
+          case 'qq':
+            selector = ".txp_btn.txp_btn_fullscreen";
+            break;
+          default:
+            selector = null;
         }
-        if(siteName === 'aliyundrive'){
-          document.querySelector(".action--HeWYA").click();
-        }
-        if(siteName === 'miguvideo'){
-          document.querySelector(".btn-bg.zoom-out").click();
-        }
-        if(siteName === 'toutiao'){
-          document.querySelector(".xgplayer-fullscreen").click();
-        }
-        if(siteName === 'douban'){
-          document.getElementsByClassName("vjs-fullscreen-control vjs-control vjs-button")[0].click();
-        }
-        if(siteName === '163'){
-          document.getElementsByClassName("vjs-fullscreen-control vjs-control vjs-button")[0].click();
-        }
-        if(siteName === 'youku'){
-          document.getElementsByClassName("kui-fullscreen-icon-0")[0].click();
-        }
-        if(siteName === 'ixigua'){
-          var arr1 = document.getElementsByClassName("xgplayer-control-item__entry");
-          arr1[arr1.length-1].click();
-         //取最后一个元素
-        }
-        if(siteName === 'huxiu'){
-          document.getElementsByClassName("plyr__control")[3].click();
-        }
-        if(siteName === 'qq'){
-          document.querySelector(".txp_btn.txp_btn_fullscreen").click();
-          //空格用.代替
-        }
+      }
+
+      if (selector) {
+        document.querySelector(selector).click();
+      }
     }
-}
+  }
 })();
 
